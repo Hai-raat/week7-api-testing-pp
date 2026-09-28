@@ -6,7 +6,6 @@ const User = require("../models/userModel");
 
 const api = supertest(app);
 
-// ---------- 2.1 Seed data + setup ----------
 const validUser = {
   name: "Jane Jobseeker",
   email: "jane.jobseeker@example.com",
@@ -29,7 +28,6 @@ afterAll(async () => {
   await mongoose.connection.close();
 });
 
-// ---------- 2.2 GET /api/users ----------
 describe("POST /api/users/signup", () => {
   describe("when the payload is valid", () => {
     it("should return status 201", async () => {
@@ -94,7 +92,6 @@ describe("POST /api/users/signup", () => {
   });
 });
 
-// ---------- 2.3 POST /api/users/login ----------
 describe("POST /api/users/login", () => {
   // create a user before each test
   beforeEach(async () => {
