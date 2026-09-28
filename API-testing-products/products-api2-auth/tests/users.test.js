@@ -16,7 +16,7 @@ const validUser = {
   date_of_birth: "1995-06-15",
   membership_status: "active",
 };
-  
+
 beforeAll(async () => {
   await connectDB();
 });
@@ -30,7 +30,7 @@ afterAll(async () => {
 });
 
 // ---------- 2.2 GET /api/users ----------
-describe ("POST /api/users/signup", () => {
+describe("POST /api/users/signup", () => {
   describe("when the payload is valid", () => {
     it("should return status 201", async () => {
       await api
@@ -41,7 +41,10 @@ describe ("POST /api/users/signup", () => {
     });
 
     it("should return an email and token", async () => {
-      const response = await api.post("/api/users/signup").send(validUser).expect(201);
+      const response = await api
+        .post("/api/users/signup")
+        .send(validUser)
+        .expect(201);
 
       expect(response.body).toHaveProperty("token");
       expect(response.body.email).toBe(validUser.email);
@@ -67,7 +70,10 @@ describe ("POST /api/users/signup", () => {
     });
 
     it("should not persist a user in the database", async () => {
-      await api.post("/api/users/signup").send({ email: "missing@example.com" }).expect(400);
+      await api
+        .post("/api/users/signup")
+        .send({ email: "missing@example.com" })
+        .expect(400);
 
       const usersAtEnd = await User.find({});
       expect(usersAtEnd).toHaveLength(0);
@@ -80,7 +86,7 @@ describe ("POST /api/users/signup", () => {
 
       const response = await api
         .post("/api/users/signup")
-        .send({ ...validUser, name: "Another Jobseeker" })  
+        .send({ ...validUser, name: "Another Jobseeker" })
         .expect(400);
 
       expect(response.body).toHaveProperty("error", "User already exists");
@@ -90,7 +96,7 @@ describe ("POST /api/users/signup", () => {
 
 // ---------- 2.3 POST /api/users/login ----------
 describe("POST /api/users/login", () => {
-    // create a user before each test
+  // create a user before each test
   beforeEach(async () => {
     await api.post("/api/users/signup").send(validUser).expect(201);
   });
@@ -100,11 +106,11 @@ describe("POST /api/users/login", () => {
       await api
         .post("/api/users/login")
         .send({ email: validUser.email, password: validUser.password })
-        .expect(200)        
+        .expect(200)
         .expect("Content-Type", /application\/json/);
     });
 
-    it("should return an email and token", async () => {    
+    it("should return an email and token", async () => {
       const response = await api
         .post("/api/users/login")
         .send({ email: validUser.email, password: validUser.password })
@@ -134,4 +140,4 @@ describe("POST /api/users/login", () => {
       expect(response.body).toHaveProperty("error", "Invalid credentials");
     });
   });
-});                 
+});
